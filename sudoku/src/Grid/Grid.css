@@ -9,3 +9,10 @@
     padding: 0
 }
 
+.grid-square.selected {
+    background-color: bisque;
+}
+
+.row {
+    height: 40px
+}

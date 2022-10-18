@@ -13,11 +13,18 @@ function App() {
         numbers.push(i)
     }
 
-    const puzzle = puzzles.RawSudoku[0]
+    const [selectedSquare, setSelectedSquare] = useState([-1, -1])
+    const [matrix, setMatrix] = useState(puzzles.RawSudoku[0])
+
 
     return (
         <div className="puzzle-area">
-            <Grid matrix={puzzle} numbers={numbers}/>
+            <Grid 
+                matrix={matrix}
+                setMatrix={setMatrix}
+                numbers={numbers}
+                selectedSquare={selectedSquare}
+                setSelectedSquare={setSelectedSquare}/>
             <Numpad numbers={numbers} />
         </div>
     )

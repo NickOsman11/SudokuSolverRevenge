@@ -5,6 +5,12 @@
   text-align: center;
 }
 
+.grid-square {
+  height: 30px;
+  width:30px;
+  text-align: center;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

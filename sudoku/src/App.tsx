@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import './App.css'
 import puzzles from './assets/puzzles'
 import Grid from './Grid/Grid'
+import Numpad from './Numpad/Numpad'
 
 function App() {
     const gridSize = 9
@@ -15,8 +16,9 @@ function App() {
     const puzzle = puzzles.RawSudoku[0]
 
     return (
-        <div className="App">
+        <div className="puzzle-area">
             <Grid matrix={puzzle} numbers={numbers}/>
+            <Numpad numbers={numbers} />
         </div>
     )
 }

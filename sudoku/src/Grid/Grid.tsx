@@ -1,6 +1,8 @@
+import './Grid.css'
+
 export default function Grid({matrix, numbers}: {matrix: number[][], numbers: number[]}): JSX.Element{
     return <>
-        <table>
+        <table className='grid'>
             <tbody>
                 {numbers.map( (row) => {
                     return <tr>

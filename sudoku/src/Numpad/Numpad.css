@@ -1,0 +1,18 @@
+.numpad {
+    outline: red solid 3px;
+    width: 150px;
+    height:150px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin: auto;
+    margin-top: 10px;
+}
+
+
+.numpad-square{
+    height: 50px;
+    width: 50px; 
+    padding: 0;
+    margin: 0;
+}

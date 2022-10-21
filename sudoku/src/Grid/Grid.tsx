@@ -1,23 +1,21 @@
+import { useEffect } from 'react';
 import './Grid.css'
+
+interface GridProps {
+    matrix: number[][], 
+    numbers: number[],
+    selectedSquare?: number[],
+    selectSquare: (row: number, col: number) => void,
+}
 
 export default function Grid(
     {matrix,
-    setMatrix, 
     numbers,
     selectedSquare,
-    setSelectedSquare}:
-    {matrix: number[][], 
-    setMatrix: React.Dispatch<React.SetStateAction<number[][]>>,
-    numbers: number[],
-    selectedSquare: number[],
-    setSelectedSquare:React.Dispatch<React.SetStateAction<number[]>>}
+    selectSquare}: GridProps
     ): JSX.Element{
 
-    function changeNumber(oldMatrix: number[][], ){
-
-    }
-
-    return <>
+    return (
         <table className='grid'>
             <tbody>
                 {numbers.map( (row) => {
@@ -26,16 +24,15 @@ export default function Grid(
                         return (
                             <button 
                                 className={
-                                    (selectedSquare[0] === row && selectedSquare[1] === col) ?
+                                    (selectedSquare && (selectedSquare[0] === row && selectedSquare[1] === col)) ?
                                     "grid-square selected" : "grid-square"}
-                                onClick={() => setSelectedSquare([row, col])}
-                            >{matrix[row][col] === 0 ? 0 : matrix[row][col]}
-                            </button>
+                                onClick={() => selectSquare(row, col)}
+                            >{matrix[row][col] === 0 ? 0 : matrix[row][col]}</button>
                         )
                     })}
                     </tr>
                 })}
             </tbody>          
         </table>
-    </>
+    )
 }

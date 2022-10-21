@@ -1,5 +1,6 @@
 .numpad {
-    outline: red solid 3px;
+    border: black solid 3px;
+    border-radius: 3px;
     width: 150px;
     height:150px;
     display: flex;
@@ -11,6 +12,8 @@
 
 
 .numpad-square{
+    border: black solid 1px;
+
     height: 50px;
     width: 50px; 
     padding: 0;

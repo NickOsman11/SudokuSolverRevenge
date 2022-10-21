@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import puzzles from './assets/puzzles'
@@ -13,19 +13,33 @@ function App() {
         numbers.push(i)
     }
 
-    const [selectedSquare, setSelectedSquare] = useState([-1, -1])
-    const [matrix, setMatrix] = useState(puzzles.RawSudoku[0])
+    const initialPuzzle = puzzles.RawSudoku[0]
+    const [selectedSquare, setSelectedSquare] = useState([-1,-1])
+    const [matrix, setMatrix]= useState(initialPuzzle)
 
+    function updateGrid(newValue: number){
+        const newMatrix = [...matrix];
+        const [row, col] = selectedSquare;
+        newMatrix[row][col] = newValue;
+        setMatrix(newMatrix);
+    }
+
+    function selectSquare(row: number, col: number){
+        setSelectedSquare([row, col])
+    }
 
     return (
         <div className="puzzle-area">
             <Grid 
                 matrix={matrix}
-                setMatrix={setMatrix}
                 numbers={numbers}
                 selectedSquare={selectedSquare}
-                setSelectedSquare={setSelectedSquare}/>
-            <Numpad numbers={numbers} />
+                selectSquare={selectSquare}
+                />
+            <Numpad 
+                numbers={numbers}
+                setNewValue={updateGrid}
+                 />
         </div>
     )
 }

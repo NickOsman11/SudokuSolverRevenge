@@ -1,5 +1,5 @@
 .numpad {
-    border: black solid 3px;
+    border: black solid 1px;
     border-radius: 3px;
     width: 150px;
     height:150px;
@@ -10,7 +10,6 @@
     margin-top: 10px;
 }
 
-
 .numpad-square{
     border: black solid 1px;
 
@@ -18,4 +17,8 @@
     width: 50px; 
     padding: 0;
     margin: 0;
+}
+
+.numpad-square.selected {
+    background-color: gold;
 }

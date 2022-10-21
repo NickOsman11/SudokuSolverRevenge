@@ -8,17 +8,16 @@
     flex-direction: row;
     margin: auto;
     margin-top: 10px;
+
 }
 
 .numpad-square{
     border: black solid 1px;
-
     height: 50px;
     width: 50px; 
     padding: 0;
     margin: 0;
+    color: whitesmoke;
+    background-color: plum;
 }
 
-.numpad-square.selected {
-    background-color: gold;
-}

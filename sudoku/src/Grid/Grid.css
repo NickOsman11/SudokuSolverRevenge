@@ -1,5 +1,5 @@
 .grid {
-    border: 0;
+    border: 3px solid black;
 }
 
 table, th, td {
@@ -15,17 +15,21 @@ table, th, td {
     padding: 0;
 }
 
-.grid-square.selected {
-    background-color: gold;
+.grid-square.initial {
+    background-color: darkcyan;
 }
 
-.grid-square.initial {
-    background-color: bisque;
+.grid-square.third {
+    border-left: 3px solid black;
 }
 
 .row {
     margin: 0;
     height: 40px
+}
+
+.row.third {
+    border-top: 3px solid black;
 }
 
 /* button:hover {

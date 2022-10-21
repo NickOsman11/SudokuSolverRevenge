@@ -21,16 +21,17 @@ export default function Grid(
         <table className='grid'>
             <tbody>
                 {numbers.map( (row) => {
-                    return <tr className='row'>
+                    return <tr className={'row' + `${row % 3 === 0 ? " third" : ""}`}>
                         {numbers.map( (col) => {
                         return (
                             <td 
                                 className=
                                     {`grid-square` 
                                     + `${selectedSquare && (row === selectedSquare[0] && selectedSquare[1] === col) ? " selected" : ""}`
-                                    + `${(initialMatrix[row][col] !== 0) ? " initial" : ""}`}
+                                    + `${(initialMatrix[row][col] !== 0) ? " initial" : ""}`
+                                    + `${col % 3 === 0 ? " third" : ""}`}
                                 onClick={() => selectSquare(row, col)}
-                            >{matrix[row][col] === 0 ? "" : matrix[row][col]}</td>
+                            >{(matrix[row][col] === 0 ? "" : matrix[row][col])}</td>
                         )
                     })}
                     </tr>

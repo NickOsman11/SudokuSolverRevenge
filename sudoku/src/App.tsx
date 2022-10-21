@@ -19,20 +19,16 @@ function App() {
         numbers.push(i)
     }
 
-    const randomNumber = Math.floor(Math.random()*puzzles.RawSudoku.length)
-
-    const [initialPuzzle, setInitialPuzzle] = useState<number[][]>(puzzles.RawSudoku[randomNumber])
+    const [initialPuzzle, setInitialPuzzle] = useState<number[][]>()
     const [selectedSquare, setSelectedSquare] = useState([-1,-1])
     const [selectedSquareValue, setSelectedSquareValue] = useState(0)
-    const [matrix, setMatrix]= useState<number[][]>(puzzles.RawSudoku[randomNumber])
+    const [matrix, setMatrix]= useState<number[][]>()
 
-    // function newGame(){
-    //     const randomNumber = Math.floor(Math.random()*puzzles.RawSudoku.length)
-    //     setInitialPuzzle(puzzles.RawSudoku[randomNumber]);
-    //     console.log(initialPuzzle)
-    //     setMatrix(initialPuzzle)
-    //     console.log(matrix)
-    // }
+    function newGame(){
+        const randomNumber = Math.floor(Math.random()*puzzles.RawSudoku.length)
+        setInitialPuzzle(puzzles.RawSudoku[randomNumber]);
+        setMatrix(puzzles.RawSudoku[randomNumber])
+    }
 
     function updateGrid(newValue: number) {
         if (matrix !== undefined) {
@@ -52,10 +48,30 @@ function App() {
     }
 
     function selectSquare(row: number, col: number) {
-        if (initialPuzzle && initialPuzzle[row][col] === 0) {
+        if (initialPuzzle && matrix && initialPuzzle[row][col] === 0) {
             setSelectedSquareValue(matrix[row][col])
             setSelectedSquare([row, col])
         }
+    }
+
+    if (initialPuzzle === undefined || matrix === undefined) {
+        return ( 
+            <div>
+                <div>
+                    <button
+                        onClick={newGame}>
+                        New Game
+                    </button>
+                </div>
+                <div>
+                    <label className="switch">
+                        <input type="checkbox"/>
+                        <span className="slider"/>
+                        Hard mode
+                    </label>                  
+                </div>
+            </div>          
+        )
     }
 
     if (initialPuzzle !== undefined && matrix !== undefined) {
@@ -77,6 +93,5 @@ function App() {
         )
     }
 }
-
 
 export default App

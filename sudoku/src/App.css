@@ -1,14 +1,26 @@
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px; */
+  width: 100%;
+  display: flex;
+  justify-content: center;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: dimgrey;
+}
+
+body {
+  background-color: pink;
 }
 
 .puzzle-area {
   width: 400px;
   position: relative;
-  
+  color: whitesmoke
+}
+
+.selected {
+  background-color: orange;
 }
 
 .logo {

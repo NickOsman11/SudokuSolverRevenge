@@ -4,6 +4,7 @@ import './App.css'
 import puzzles from './assets/puzzles'
 import Grid from './Grid/Grid'
 import Numpad from './Numpad/Numpad'
+import NewGameScreen from './NewGameScreen/NewGameScreen'
 
 export interface GridSquare {
     coordinates: number[]; //[row, column]
@@ -12,7 +13,7 @@ export interface GridSquare {
 }
 
 function App() {
-
+    const easyMode: boolean = false
     const gridSize = 9
     const numbers: number[] = []
 
@@ -20,13 +21,13 @@ function App() {
         numbers.push(i)
     }
 
-    const [initialPuzzle, setInitialPuzzle] = useState<number[][]>()
-    const [puzzle, setPuzzle]= useState<GridSquare[][]>()
+    const [initialPuzzle, setInitialPuzzle] = useState<number[][]>();
+    const [puzzle, setPuzzle]= useState<GridSquare[][]>();
     const [selectedSquare, setSelectedSquare] = useState<GridSquare>({
         coordinates: [-1, -1],
         value: 0,
         eliminatedNumbers: [],
-        })
+    });
 
     function newGame(){
 
@@ -48,21 +49,22 @@ function App() {
     }
 
     function updatePuzzle(newValue: number) {
-        if (puzzle !== undefined) {
-            const updatedPuzzle = puzzle.map(row => row.map(square => square))
-            const [row, col] = selectedSquare.coordinates;
-
-            if (newValue === selectedSquare.value) {
-                updatedPuzzle[row][col].value = 0;
-            }
-            else {
-                updatedPuzzle[row][col].value = newValue;
-            }
-            setSelectedSquare(updatedPuzzle[row][col]);
-            setPuzzle(updatedPuzzle);
+        if (puzzle === undefined) {
+            return
         }
-    }
+        const updatedPuzzle = puzzle.map(row => row.map(square => square))
+        const [row, col] = selectedSquare.coordinates;
 
+        if (newValue === selectedSquare.value) {
+            updatedPuzzle[row][col].value = 0;
+        }
+        else {
+            updatedPuzzle[row][col].value = newValue;
+        }
+        setSelectedSquare(updatedPuzzle[row][col]);
+        setPuzzle(updatedPuzzle);
+    }
+    
     function selectSquare(row: number, col: number) {
         if (initialPuzzle && puzzle && initialPuzzle[row][col] === 0) {
             setSelectedSquare(puzzle[row][col])
@@ -70,39 +72,26 @@ function App() {
     }
 
     if (initialPuzzle === undefined ) {
-        return ( 
-            <div>
-                <div>
-                    <button
-                        onClick={newGame}>
-                        New Game
-                    </button>
-                </div>
-                <div>
-                    <label className="switch">
-                        <input type="checkbox"/>
-                        <span className="slider"/>
-                        Hard mode
-                    </label>                  
-                </div>
-            </div>          
-        )
+        return (<NewGameScreen
+            newGame={newGame}
+            easyMode={easyMode}
+        />)
     }
 
     if (initialPuzzle && puzzle) {
         return (
             <main className="puzzle-area">
                 <Grid 
-                initialPuzzle={initialPuzzle}
-                puzzle={puzzle}
-                numbers={numbers}
-                selectedSquare={selectedSquare}
-                selectSquare={selectSquare}
+                    initialPuzzle={initialPuzzle}
+                    puzzle={puzzle}
+                    numbers={numbers}
+                    selectedSquare={selectedSquare}
+                    selectSquare={selectSquare}
                 />
                 <Numpad 
-                numbers={numbers}
-                selectedSquareValue={selectedSquare.value}
-                setValue={updatePuzzle}
+                    numbers={numbers}
+                    selectedSquareValue={selectedSquare.value}
+                    setValue={updatePuzzle}
                 />
             </main>
         )

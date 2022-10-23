@@ -5,13 +5,14 @@ import puzzles from './assets/puzzles'
 import Grid from './Grid/Grid'
 import Numpad from './Numpad/Numpad'
 
-// interface SelectedSquare {
-//     row: number;
-//     col: number;
-//     value: number
-// }
+export interface GridSquare {
+    coordinates: number[]; //[row, column]
+    value: number;
+    eliminatedNumbers: number[]
+}
 
 function App() {
+
     const gridSize = 9
     const numbers: number[] = []
 
@@ -20,41 +21,55 @@ function App() {
     }
 
     const [initialPuzzle, setInitialPuzzle] = useState<number[][]>()
-    const [selectedSquare, setSelectedSquare] = useState([-1,-1])
-    const [selectedSquareValue, setSelectedSquareValue] = useState(0)
-    const [matrix, setMatrix]= useState<number[][]>()
+    const [puzzle, setPuzzle]= useState<GridSquare[][]>()
+    const [selectedSquare, setSelectedSquare] = useState<GridSquare>({
+        coordinates: [-1, -1],
+        value: 0,
+        eliminatedNumbers: [],
+        })
 
     function newGame(){
+
         const randomNumber = Math.floor(Math.random()*puzzles.RawSudoku.length)
-        setInitialPuzzle(puzzles.RawSudoku[randomNumber]);
-        setMatrix(puzzles.RawSudoku[randomNumber])
+        const startingPuzzle = puzzles.RawSudoku[randomNumber]
+        
+        const newPuzzle: GridSquare[][] = numbers.map(row => {
+            return numbers.map(col => {
+                return {
+                    coordinates: [row, col],
+                    value: startingPuzzle[row][col],
+                    eliminatedNumbers: [],
+                }
+            })
+        })
+        console.log(newPuzzle);
+        setInitialPuzzle(startingPuzzle);
+        setPuzzle(newPuzzle);
     }
 
-    function updateGrid(newValue: number) {
-        if (matrix !== undefined) {
-            const newMatrix = matrix.map(row => row.map(square => square))
-            const [row, col] = selectedSquare;
+    function updatePuzzle(newValue: number) {
+        if (puzzle !== undefined) {
+            const updatedPuzzle = puzzle.map(row => row.map(square => square))
+            const [row, col] = selectedSquare.coordinates;
 
-            if (newValue === selectedSquareValue) {
-                newMatrix[row][col] = 0;
-                setSelectedSquareValue(0);
+            if (newValue === selectedSquare.value) {
+                updatedPuzzle[row][col].value = 0;
             }
             else {
-                newMatrix[row][col] = newValue;
-                setSelectedSquareValue(newMatrix[row][col]);
+                updatedPuzzle[row][col].value = newValue;
             }
-            setMatrix(newMatrix);
+            setSelectedSquare(updatedPuzzle[row][col]);
+            setPuzzle(updatedPuzzle);
         }
     }
 
     function selectSquare(row: number, col: number) {
-        if (initialPuzzle && matrix && initialPuzzle[row][col] === 0) {
-            setSelectedSquareValue(matrix[row][col])
-            setSelectedSquare([row, col])
+        if (initialPuzzle && puzzle && initialPuzzle[row][col] === 0) {
+            setSelectedSquare(puzzle[row][col])
         }
     }
 
-    if (initialPuzzle === undefined || matrix === undefined) {
+    if (initialPuzzle === undefined ) {
         return ( 
             <div>
                 <div>
@@ -74,20 +89,20 @@ function App() {
         )
     }
 
-    if (initialPuzzle !== undefined && matrix !== undefined) {
+    if (initialPuzzle && puzzle) {
         return (
             <main className="puzzle-area">
                 <Grid 
-                initialMatrix={initialPuzzle}
-                matrix={matrix}
+                initialPuzzle={initialPuzzle}
+                puzzle={puzzle}
                 numbers={numbers}
                 selectedSquare={selectedSquare}
                 selectSquare={selectSquare}
                 />
                 <Numpad 
                 numbers={numbers}
-                selectedSquareValue={selectedSquareValue}
-                setValue={updateGrid}
+                selectedSquareValue={selectedSquare.value}
+                setValue={updatePuzzle}
                 />
             </main>
         )

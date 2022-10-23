@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import './Grid.css'
+import { GridSquare } from '../App'
 
 interface GridProps {
-    initialMatrix: number[][];
-    matrix: number[][];
+    initialPuzzle: number[][];
+    puzzle: GridSquare[][];
     numbers: number[];
-    selectedSquare?: number[];
+    selectedSquare?: GridSquare;
     selectSquare: (row: number, col: number) => void;
 }
 
 export default function Grid(
-    {initialMatrix,
-    matrix,
+    {initialPuzzle,
+    puzzle,
     numbers,
     selectedSquare,
     selectSquare}: GridProps
@@ -27,11 +28,11 @@ export default function Grid(
                             <td 
                                 className=
                                     {`grid-square` 
-                                    + `${selectedSquare && (row === selectedSquare[0] && selectedSquare[1] === col) ? " selected" : ""}`
-                                    + `${(initialMatrix[row][col] !== 0) ? " initial" : ""}`
+                                    + `${selectedSquare && (row === selectedSquare.coordinates[0] && selectedSquare.coordinates[1] === col) ? " selected" : ""}`
+                                    + `${(initialPuzzle[row][col] !== 0) ? " initial" : ""}`
                                     + `${col % 3 === 0 ? " third" : ""}`}
                                 onClick={() => selectSquare(row, col)}
-                            >{(matrix[row][col] === 0 ? "" : matrix[row][col])}</td>
+                            >{(puzzle[row][col].value === 0 ? "" : puzzle[row][col].value)}</td>
                         )
                     })}
                     </tr>

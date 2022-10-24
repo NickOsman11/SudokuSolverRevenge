@@ -1,24 +1,27 @@
+import Puzzle from '../Puzzle/puzzle';
+import GridSquare from '../Puzzle/square';
 import './Numpad.css'
 
 interface NumpadProps {
-    numbers: number[];
     selectedSquareValue: number,
-    setValue: (newValue: number) => void;
+    puzzle: Puzzle,
+    updatePuzzle: (newValue: number) => void,
 }
 
 export default function Numpad(
-    {numbers,
-    selectedSquareValue,
-    setValue}: NumpadProps): JSX.Element{
+    {selectedSquareValue,
+    puzzle,
+    updatePuzzle
+    }: NumpadProps): JSX.Element{
 
     return(
         <div className="numpad">
-            {numbers.map(n => {
+            {puzzle.numbers.map(n => {
                 return (
                     <button 
                         className={`numpad-square`
                         + `${(selectedSquareValue === n+1 ? " selected" : "")}`}
-                        onClick={() => setValue(n+1)}>
+                        onClick={() => updatePuzzle(n+1)}>
                         {n + 1}
                     </button>
                 )

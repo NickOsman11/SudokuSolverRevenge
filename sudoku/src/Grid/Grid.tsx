@@ -1,38 +1,46 @@
 import { useEffect } from 'react';
 import './Grid.css'
-import { GridSquare } from '../App'
+import Puzzle from '../Puzzle/puzzle';
+import GridSquare from '../Puzzle/square';
 
 interface GridProps {
     initialPuzzle: number[][];
-    puzzle: GridSquare[][];
-    numbers: number[];
+    puzzle: Puzzle;
     selectedSquare?: GridSquare;
-    selectSquare: (row: number, col: number) => void;
+    setSelectedSquare: (square: GridSquare) => void, 
 }
 
 export default function Grid(
     {initialPuzzle,
     puzzle,
-    numbers,
     selectedSquare,
-    selectSquare}: GridProps
-    ): JSX.Element{
+    setSelectedSquare,
+    }: GridProps): JSX.Element{
+
+    function selectSquare(
+        row: number,
+        col: number,
+        ) {
+            if (initialPuzzle[row][col] === 0) {
+                setSelectedSquare(puzzle.matrix[row][col])
+            }
+    }
     
     return (
         <table className='grid'>
             <tbody>
-                {numbers.map( (row) => {
+                {puzzle.numbers.map( (row) => {
                     return <tr className={'row' + `${row % 3 === 0 ? " third" : ""}`}>
-                        {numbers.map( (col) => {
+                        {puzzle.numbers.map( (col) => {
                         return (
                             <td 
                                 className=
                                     {`grid-square` 
-                                    + `${selectedSquare && (row === selectedSquare.coordinates[0] && selectedSquare.coordinates[1] === col) ? " selected" : ""}`
+                                    + `${selectedSquare && (row === selectedSquare.i && selectedSquare.j === col) ? " selected" : ""}`
                                     + `${(initialPuzzle[row][col] !== 0) ? " initial" : ""}`
                                     + `${col % 3 === 0 ? " third" : ""}`}
                                 onClick={() => selectSquare(row, col)}
-                            >{(puzzle[row][col].value === 0 ? "" : puzzle[row][col].value)}</td>
+                            >{(puzzle.matrix[row][col].value === 0 ? "" : puzzle.matrix[row][col].value)}</td>
                         )
                     })}
                     </tr>

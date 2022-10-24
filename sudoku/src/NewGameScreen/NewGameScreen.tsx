@@ -1,11 +1,11 @@
 interface NewGameScreenProps {
     newGame: () => void;
-    easyMode: boolean;
 }
 
-export default function NewGameScreen({
-    newGame,
-    easyMode,}: NewGameScreenProps): JSX.Element{
+export default function NewGameScreen(
+    {newGame}: NewGameScreenProps): JSX.Element{
+    
+    let easyMode = false
 
     return ( 
         <div>

@@ -1,80 +1,58 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useState } from 'react'
 import './App.css'
-import puzzles from './assets/puzzles'
 import Grid from './Grid/Grid'
 import Numpad from './Numpad/Numpad'
 import NewGameScreen from './NewGameScreen/NewGameScreen'
-
-export interface GridSquare {
-    coordinates: number[]; //[row, column]
-    value: number;
-    eliminatedNumbers: number[]
-}
+import GridSquare from './Puzzle/square'
+import Puzzle from './Puzzle/puzzle'
+import puzzles from './assets/puzzles'
 
 function App() {
-    const easyMode: boolean = false
-    const gridSize = 9
-    const numbers: number[] = []
-
-    for (let i = 0; i<gridSize; i++) {
-        numbers.push(i)
-    }
 
     const [initialPuzzle, setInitialPuzzle] = useState<number[][]>();
-    const [puzzle, setPuzzle]= useState<GridSquare[][]>();
+    const [puzzle, setPuzzle]= useState<Puzzle>();
     const [selectedSquare, setSelectedSquare] = useState<GridSquare>({
-        coordinates: [-1, -1],
+        i: -1,
+        j: -1,
         value: 0,
         eliminatedNumbers: [],
     });
 
-    function newGame(){
-
-        const randomNumber = Math.floor(Math.random()*puzzles.RawSudoku.length)
-        const startingPuzzle = puzzles.RawSudoku[randomNumber]
+    function newGame() {
         
-        const newPuzzle: GridSquare[][] = numbers.map(row => {
-            return numbers.map(col => {
-                return {
-                    coordinates: [row, col],
-                    value: startingPuzzle[row][col],
-                    eliminatedNumbers: [],
-                }
-            })
-        })
-        console.log(newPuzzle);
+        const randomNumber = Math.floor(Math.random()*puzzles.RawSudoku.length)
+        let startingPuzzle = puzzles.RawSudoku[randomNumber]
+        const newPuzzle = new Puzzle(false, startingPuzzle)
         setInitialPuzzle(startingPuzzle);
         setPuzzle(newPuzzle);
     }
 
-    function updatePuzzle(newValue: number) {
-        if (puzzle === undefined) {
-            return
+    function updatePuzzle(
+        newValue: number,
+    ) {
+        if (puzzle) {
+            const [row, col] = [selectedSquare.i, selectedSquare.j]
+            let copyOfCurrentMatrix = puzzle.matrix.map(row => {return row.map(col => {return col})})
+            let updatedPuzzle = new Puzzle(puzzle.easyMode, undefined, copyOfCurrentMatrix)
+            if (puzzle.easyMode) {
+                //TODO: check that the move is valid!
+            }
+            else {
+                if (updatedPuzzle.matrix[row][col].value === newValue) {
+                    updatedPuzzle.setNumber(row, col, 0)
+                }
+                else {
+                    updatedPuzzle.setNumber(row, col, newValue)
+                }
+                setSelectedSquare(updatedPuzzle.matrix[row][col])
+                setPuzzle(updatedPuzzle)
+            }
         }
-        const updatedPuzzle = puzzle.map(row => row.map(square => square))
-        const [row, col] = selectedSquare.coordinates;
-
-        if (newValue === selectedSquare.value) {
-            updatedPuzzle[row][col].value = 0;
-        }
-        else {
-            updatedPuzzle[row][col].value = newValue;
-        }
-        setSelectedSquare(updatedPuzzle[row][col]);
-        setPuzzle(updatedPuzzle);
     }
-    
-    function selectSquare(row: number, col: number) {
-        if (initialPuzzle && puzzle && initialPuzzle[row][col] === 0) {
-            setSelectedSquare(puzzle[row][col])
-        }
-    }
 
-    if (initialPuzzle === undefined ) {
+    if (initialPuzzle === undefined) {
         return (<NewGameScreen
             newGame={newGame}
-            easyMode={easyMode}
         />)
     }
 
@@ -84,14 +62,13 @@ function App() {
                 <Grid 
                     initialPuzzle={initialPuzzle}
                     puzzle={puzzle}
-                    numbers={numbers}
                     selectedSquare={selectedSquare}
-                    selectSquare={selectSquare}
+                    setSelectedSquare={setSelectedSquare}
                 />
                 <Numpad 
-                    numbers={numbers}
                     selectedSquareValue={selectedSquare.value}
-                    setValue={updatePuzzle}
+                    puzzle={puzzle}
+                    updatePuzzle={updatePuzzle}
                 />
             </main>
         )

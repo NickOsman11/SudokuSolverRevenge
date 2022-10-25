@@ -61,14 +61,23 @@ export default class Puzzle {
     }
 
     setNumber(i:number, j:number, newValue:number) {
-        console.log(this.matrix[i][j])
+
         this.matrix[i][j].value = newValue
-        if (this.easyMode && newValue !== 0){
+        if (newValue != 0 && this.easyMode){
             HintHelper.updateEliminatedNumbers(i, j, this, newValue)
         }
     }
 
-    addEliminatedNumber(i:number, j:number, number: number){
+    addEliminatedNumber(i:number, j:number, number: number) {
         this.matrix[i][j].eliminatedNumbers.push(number)
     }
+
+    addTriedNumber(i:number, j:number, number: number) {
+        this.matrix[i][j].triedNumbers.push(number)
+    }
+
+    checkIfLegalMove(i:number, j:number, number: number) {
+        return !this.matrix[i][j].eliminatedNumbers.includes(number)
+    }
+
 };

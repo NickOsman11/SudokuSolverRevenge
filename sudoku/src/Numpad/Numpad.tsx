@@ -3,13 +3,13 @@ import GridSquare from '../Puzzle/square';
 import './Numpad.css'
 
 interface NumpadProps {
-    selectedSquareValue: number,
+    selectedSquare: GridSquare,
     puzzle: Puzzle,
     updatePuzzle: (newValue: number) => void,
 }
 
 export default function Numpad(
-    {selectedSquareValue,
+    {selectedSquare,
     puzzle,
     updatePuzzle
     }: NumpadProps): JSX.Element{
@@ -20,9 +20,9 @@ export default function Numpad(
                 return (
                     <button 
                         className={`numpad-square`
-                        + `${(selectedSquareValue === n+1 ? " selected" : "")}`}
+                        + `${(selectedSquare.value === n+1 ? " selected" : "")}`}
                         onClick={() => updatePuzzle(n+1)}>
-                        {n + 1}
+                        {selectedSquare.triedNumbers.includes(n + 1) ? "" : `${n + 1}`}
                     </button>
                 )
             })}

@@ -1,5 +1,5 @@
 interface NewGameScreenProps {
-    newGame: () => void;
+    newGame: (newGame: boolean) => void;
 }
 
 export default function NewGameScreen(
@@ -11,14 +11,14 @@ export default function NewGameScreen(
         <div>
             <div>
                 <button
-                    onClick={newGame}>
+                    onClick={() => newGame(easyMode)}>
                     New Game
                 </button>
             </div>
             <div>
                 <input 
                     type="checkbox"
-                    onClick={() => {easyMode = !easyMode; console.log(easyMode);}}/>
+                    onClick={() => {easyMode = !easyMode}}/>
                 Easy mode          
             </div>
         </div>          

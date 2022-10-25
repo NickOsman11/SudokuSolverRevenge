@@ -21,7 +21,7 @@ export default class HintHelper {
 
         grid.numbers.forEach(n =>{
             if (!grid.eliminatedNumbersAt(i, j).includes(n + 1)){
-                grid.addEliminatedNumber(i, j, n)
+                grid.addEliminatedNumber(i, j, n + 1)
             }
         })
     }
@@ -54,5 +54,54 @@ export default class HintHelper {
                 }
             }
         }
+    }
+
+    static checkIfNumberIsDetermined(i: number, j: number, grid: Puzzle, n: number) {
+
+        return (this.checkIfNumberEliminatedForRestOfRow(i, j, grid, n) ||
+            this.checkIfNumberEliminatedForRestOfCol(i, j, grid, n) ||
+            this.checkIfNumberEliminatedForSubgrid(i, j, grid, n))
+    }
+
+    static checkIfNumberEliminatedForRestOfRow(i: number, j: number,
+        grid: Puzzle, n: number){
+
+        let numberOfSquaresEliminated = 0
+        for (let col = 0; col < grid.matrixSize; col++) {
+            if (col != j && grid.eliminatedNumbersAt(i, col).includes(n)) {
+                numberOfSquaresEliminated++
+            }
+        }
+        return (numberOfSquaresEliminated === grid.matrixSize - 1) 
+    }
+
+    static checkIfNumberEliminatedForRestOfCol(i: number, j: number,
+        grid: Puzzle, n: number){
+
+        let numberOfSquaresEliminated = 0
+        for (let row = 0; row < grid.matrixSize; row ++){
+            if (row != i && grid.eliminatedNumbersAt(row, j).includes(n)){   
+                numberOfSquaresEliminated ++
+            }
+        }
+        return (numberOfSquaresEliminated === grid.matrixSize - 1) 
+    }
+    
+    static checkIfNumberEliminatedForSubgrid(i: number, j: number,
+        grid: Puzzle, n: number) {
+
+        let numberOfSquaresEliminated = 0;
+        let subgridSize = Math.sqrt(grid.matrixSize);
+
+        for (let row = i - i % subgridSize; row < (i - i % subgridSize) + subgridSize; row++) {
+            for (let col = j - j % subgridSize; col < (j - j % subgridSize) + subgridSize; col++) {
+                if (!(row === i && col === j)) {
+                    if (grid.eliminatedNumbersAt(row, col).includes(n)) {
+                        numberOfSquaresEliminated++
+                    }
+                }
+            }
+        }
+        return (numberOfSquaresEliminated === grid.matrixSize - 1) 
     }
 }

@@ -21,6 +21,7 @@ export default function Grid(
         row: number,
         col: number,
         ) {
+            console.log(puzzle.matrix[row][col])
             if (initialPuzzle[row][col] === 0) {
                 setSelectedSquare(puzzle.matrix[row][col])
             }

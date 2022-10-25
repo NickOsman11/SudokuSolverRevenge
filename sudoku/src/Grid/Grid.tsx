@@ -8,6 +8,7 @@ interface GridProps {
     puzzle: Puzzle;
     selectedSquare?: GridSquare;
     setSelectedSquare: (square: GridSquare) => void, 
+    hintSquare: GridSquare,
 }
 
 export default function Grid(
@@ -15,6 +16,7 @@ export default function Grid(
     puzzle,
     selectedSquare,
     setSelectedSquare,
+    hintSquare,
     }: GridProps): JSX.Element{
 
     function selectSquare(
@@ -38,6 +40,7 @@ export default function Grid(
                                 className=
                                     {`grid-square` 
                                     + `${selectedSquare && (row === selectedSquare.i && selectedSquare.j === col) ? " selected" : ""}`
+                                    + `${hintSquare && (row === hintSquare.i && hintSquare.j === col) ? " hint" : ""}`
                                     + `${(initialPuzzle[row][col] !== 0) ? " initial" : ""}`
                                     + `${col % 3 === 0 ? " third" : ""}`}
                                 onClick={() => selectSquare(row, col)}

@@ -1,6 +1,23 @@
 import Puzzle from "./puzzle"
+import GridSquare from "./square"
 
 export default class HintHelper {
+
+    static getHint(puzzle: Puzzle): GridSquare {
+
+        let hints: GridSquare[] = []
+        puzzle.numbers.forEach(row => {
+            puzzle.numbers.forEach(col => {
+                puzzle.numbers.forEach(n => {
+                    console.log(this.checkIfNumberIsDetermined(row, col, puzzle, n))
+                    if ( this.checkIfNumberIsDetermined(row, col, puzzle, n)) {
+                        hints.push(puzzle.matrix[row][col])
+                    }
+                })
+            })
+        })
+        return hints[Math.floor(Math.random()*hints.length)]
+    }
 
     static updateEliminatedNumbers(i: number ,j: number, grid:Puzzle, numberJustSet:number){
 
@@ -58,9 +75,10 @@ export default class HintHelper {
 
     static checkIfNumberIsDetermined(i: number, j: number, grid: Puzzle, n: number) {
 
-        return (this.checkIfNumberEliminatedForRestOfRow(i, j, grid, n) ||
+        return (!grid.matrix[i][j].eliminatedNumbers.includes(n) &&
+            (this.checkIfNumberEliminatedForRestOfRow(i, j, grid, n) ||
             this.checkIfNumberEliminatedForRestOfCol(i, j, grid, n) ||
-            this.checkIfNumberEliminatedForSubgrid(i, j, grid, n))
+            this.checkIfNumberEliminatedForSubgrid(i, j, grid, n)))
     }
 
     static checkIfNumberEliminatedForRestOfRow(i: number, j: number,

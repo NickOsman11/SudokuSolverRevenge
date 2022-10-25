@@ -19,6 +19,13 @@ function App() {
         eliminatedNumbers: [],
         triedNumbers: [],
     });
+    const [hintSquare, setHintSquare] = useState<GridSquare>({
+        i: -1,
+        j: -1,
+        value: 0,
+        eliminatedNumbers: [],
+        triedNumbers: [],
+    });
 
     function newGame(easyMode: boolean) {
         
@@ -33,35 +40,32 @@ function App() {
     function updatePuzzle(
         newValue: number,
     ) {
-        if (puzzle) {
-            const [row, col] = [selectedSquare.i, selectedSquare.j]
-            let copyOfCurrentMatrix = puzzle.matrix.map(row => {return row.map(col => {return col})})
-            let updatedPuzzle = new Puzzle(puzzle.easyMode, undefined, copyOfCurrentMatrix)
-            if (puzzle.easyMode) {
-                if (!puzzle.checkIfLegalMove(row, col, newValue)) {
-                    updatedPuzzle.addTriedNumber(row, col, newValue)
-                }
-                else if (HintHelper.checkIfNumberIsDetermined(row, col, puzzle, newValue)) {
-                    console.log("determined")
-                    updatedPuzzle.setNumber(row, col, newValue)
-                }
-                else {
-                    console.log("legal but undetermined")
-                }
-                setSelectedSquare(updatedPuzzle.matrix[row][col])
-                setPuzzle(updatedPuzzle)
-
+        if (!puzzle) {
+            return
+        }
+        
+        const [row, col] = [selectedSquare.i, selectedSquare.j]
+        let copyOfCurrentMatrix = puzzle.matrix.map(row => {return row.map(col => {return col})})
+        let updatedPuzzle = new Puzzle(puzzle.easyMode, undefined, copyOfCurrentMatrix)
+        if (puzzle.easyMode) {
+            if (!puzzle.checkIfLegalMove(row, col, newValue)) {
+                updatedPuzzle.addTriedNumber(row, col, newValue)
+            }
+            else if (HintHelper.checkIfNumberIsDetermined(row, col, puzzle, newValue)) {
+                updatedPuzzle.setNumber(row, col, newValue)
+            }
+            setSelectedSquare(updatedPuzzle.matrix[row][col])
+            setPuzzle(updatedPuzzle)
+        }
+        else {
+            if (puzzle.matrix[row][col].value === newValue) {
+                updatedPuzzle.setNumber(row, col, 0)
             }
             else {
-                if (puzzle.matrix[row][col].value === newValue) {
-                    updatedPuzzle.setNumber(row, col, 0)
-                }
-                else {
-                    puzzle.setNumber(row, col, newValue)
-                }
-                setSelectedSquare(updatedPuzzle.matrix[row][col])
-                setPuzzle(updatedPuzzle)
+                puzzle.setNumber(row, col, newValue)
             }
+            setSelectedSquare(updatedPuzzle.matrix[row][col])
+            setPuzzle(updatedPuzzle)
         }
     }
 
@@ -79,12 +83,21 @@ function App() {
                     puzzle={puzzle}
                     selectedSquare={selectedSquare}
                     setSelectedSquare={setSelectedSquare}
+                    hintSquare={hintSquare}
                 />
                 <Numpad 
                     selectedSquare={selectedSquare}
                     puzzle={puzzle}
                     updatePuzzle={updatePuzzle}
                 />
+                {puzzle.easyMode ?  
+                <button
+                    onClick={() => setHintSquare(HintHelper.getHint(puzzle))}>
+                    Hint
+                </button> :
+                <></>
+                }
+
             </main>
         )
     }

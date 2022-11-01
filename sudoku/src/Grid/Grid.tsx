@@ -17,7 +17,8 @@ export default function Grid(
     selectedSquare,
     setSelectedSquare,
     hintSquare,
-    }: GridProps): JSX.Element{
+    }: GridProps
+    ): JSX.Element{
 
     function selectSquare(
         row: number,
@@ -32,19 +33,19 @@ export default function Grid(
     return (
         <table className='grid'>
             <tbody>
-                {puzzle.numbers.map( (row) => {
-                    return <tr className={'row' + `${row % 3 === 0 ? " third" : ""}`}>
-                        {puzzle.numbers.map( (col) => {
+                {puzzle.numbers.map(i => {
+                    return <tr className={'row' + `${i % 3 === 0 ? " third" : ""}`}>
+                        {puzzle.numbers.map( j => {
                         return (
                             <td 
                                 className=
                                     {`grid-square` 
-                                    + `${selectedSquare && (row === selectedSquare.i && selectedSquare.j === col) ? " selected" : ""}`
-                                    + `${hintSquare && (row === hintSquare.i && hintSquare.j === col) ? " hint" : ""}`
-                                    + `${(initialPuzzle[row][col] !== 0) ? " initial" : ""}`
-                                    + `${col % 3 === 0 ? " third" : ""}`}
-                                onClick={() => selectSquare(row, col)}
-                            >{(puzzle.matrix[row][col].value === 0 ? "" : puzzle.matrix[row][col].value)}</td>
+                                    + `${selectedSquare && (i === selectedSquare.row && j ===selectedSquare.col) ? " selected" : ""}`
+                                    + `${hintSquare && (i === hintSquare.row && j === hintSquare.col) ? " hint" : ""}`
+                                    + `${(initialPuzzle[i][j] !== 0) ? " initial" : ""}`
+                                    + `${j % 3 === 0 ? " third" : ""}`}
+                                onClick={() => selectSquare(i, j)}
+                            >{(puzzle.numberAt(i, j) === 0 ? "" : puzzle.numberAt(i, j))}</td>
                         )
                     })}
                     </tr>

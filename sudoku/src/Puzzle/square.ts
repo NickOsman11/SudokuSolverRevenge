@@ -1,19 +1,17 @@
-export default class GridSquare { 
-    i: number;
-    j: number;
+export default class Square { 
+    row: number;
+    col: number;
     value: number;
-    eliminatedNumbers: number[];
     triedNumbers: number[];
 
     constructor(row: number, col: number, value: number) {
-        this.i = row;
-        this.j = col;
+        this.row = row;
+        this.col = col;
         this.value = value //the number at that square - zero if empty
-        this.eliminatedNumbers = [] //a list of all the numbers that cannot//be at that square
         this.triedNumbers = []
     }
 
     static at(row: number, col: number, number: number){
-        return new GridSquare(row, col, number)
+        return new Square(row, col, number)
     }
 }

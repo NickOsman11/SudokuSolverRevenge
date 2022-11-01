@@ -1,13 +1,18 @@
-import GridSquare from "./square";
+import Square from "./square";
 import HintHelper from "./hintHelper";
 
 export default class Puzzle {
     matrixSize: number;
-    matrix: GridSquare[][];
+    matrix: Square[][];
     numbers: number[];
     easyMode: boolean;
     
-    constructor(easyMode: boolean, initialMatrix?: number[][], oldMatrix?: GridSquare[][]){
+    constructor(
+        easyMode: boolean, 
+        initialMatrix?: number[][], 
+        oldMatrix?: Square[][]
+        ) {
+
         this.matrixSize = 9;
         this.numbers = this.getNumbersList(); //list of numbers from [1 => gridsize]
         this.easyMode = easyMode;
@@ -20,15 +25,13 @@ export default class Puzzle {
         }
     }
 
-    createGrid() :GridSquare[][] {
+    createGrid(): Square[][] {
 
         const puzzle = new Array(this.matrixSize)
         for (let i = 0; i<this.matrixSize; i++){
             puzzle[i] = new Array(this.matrixSize)
-        }
-        for (let i = 0; i<this.matrixSize; i++){
             for (let j = 0; j<this.matrixSize; j++){
-                puzzle[i][j] = GridSquare.at(i, j, 0)
+                puzzle[i][j] = Square.at(i, j, 0)
             }
         }
         return puzzle 
@@ -56,28 +59,14 @@ export default class Puzzle {
         return this.matrix[i][j].value
     }
 
-    eliminatedNumbersAt(i:number, j:number) {
-        return this.matrix[i][j].eliminatedNumbers
-    }
-
     setNumber(i:number, j:number, newValue:number) {
 
         this.matrix[i][j].value = newValue
-        if (newValue != 0 && this.easyMode){
-            HintHelper.updateEliminatedNumbers(i, j, this, newValue)
-        }
-    }
-
-    addEliminatedNumber(i:number, j:number, number: number) {
-        this.matrix[i][j].eliminatedNumbers.push(number)
     }
 
     addTriedNumber(i:number, j:number, number: number) {
-        this.matrix[i][j].triedNumbers.push(number)
+        if (this.matrix[i][j].value !== number){
+            this.matrix[i][j].triedNumbers.push(number)
+        }
     }
-
-    checkIfLegalMove(i:number, j:number, number: number) {
-        return !this.matrix[i][j].eliminatedNumbers.includes(number)
-    }
-
 };

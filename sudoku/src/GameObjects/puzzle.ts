@@ -4,18 +4,18 @@ export default class Puzzle {
     matrixSize: number;
     matrix: Square[][];
     numbers: number[];
-    easyMode: boolean;
     
     constructor(
-        easyMode: boolean, 
         initialMatrix?: number[][], 
         oldMatrix?: Square[][]
+        //I wish you could overload constructors in JS - sometimes we need to create a new puzzle (at the beginning of the game),
+        //and sometimes we're just creating a copy of an old puzzle. This way of doing it seems messy and I would appreciate feedback
+        //on how to improve it
     ) {
 
         this.matrixSize = 9;
         this.numbers = this.getNumbersList();       //list of numbers from [0 => (n-1)] for iterating over
-        this.easyMode = easyMode;
-        this.matrix = this.createMatrix()           //creates n x n matrix of Squares
+        this.matrix = this.createMatrix()          
         if (initialMatrix) {
             this.setInitialNumbers(initialMatrix)   
         }

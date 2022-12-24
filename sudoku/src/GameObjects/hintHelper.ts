@@ -4,7 +4,7 @@ import Square from "./square"
 export default class HintHelper {
     matrixSize: number;
     numbers: number[];
-    eliminatedNumbersMatrix: number[][][];  // a matrix of arrays, each array storing the numbers that are eliminated for that square
+    eliminatedNumbers: number[][][];  // a matrix of arrays, each array storing the numbers that are eliminated for the square at those co-ords
     determinedSquares: Square[];
 
     constructor(
@@ -12,25 +12,24 @@ export default class HintHelper {
     ) {
         this.matrixSize = puzzle.matrixSize;
         this.numbers = puzzle.numbers;
-        this.eliminatedNumbersMatrix = this.createMatrix();
-        this.populateEliminatedNumbersMatrix(puzzle)                                 
+        this.eliminatedNumbers = this.createMatrix();
+        this.populateEliminatedNumbers(puzzle)                                 
         this.determinedSquares = this.findAllDeterminedSquares(puzzle)
     }
 
-    checkIfMoveCorrect(     //checks that the attempted move is in the list of determined moves
-        row: number,
-        col: number,
-        number: number,
-    ) {
+    checkIfMoveCorrect(row: number, col: number, number: number) {
         return this.determinedSquares.some(s => (s.row === row && s.col === col && s.value === number))
     }
 
-    getHint(): Square {         
-        return this.determinedSquares[Math.floor(Math.random()*this.determinedSquares.length)]
+    getHint(): Square {
+        if (this.determinedSquares.length !== 0) {
+            return this.determinedSquares[Math.floor(Math.random()*this.determinedSquares.length)]
+        }
+        return new Square(-1, -1, 0)
     }
 
     checkIfNumberEliminated(row: number, col: number, value: number) {
-        return this.eliminatedNumbersMatrix[row][col].includes(value)
+        return this.eliminatedNumbers[row][col].includes(value)                        
     }
 
     createMatrix(): number[][][] {
@@ -44,10 +43,10 @@ export default class HintHelper {
         return matrix 
     }
 
-    populateEliminatedNumbersMatrix(puzzle: Puzzle) {
+    populateEliminatedNumbers(puzzle: Puzzle) {
         this.numbers.forEach(i => {
-            this.numbers.forEach(j => {
-                this.updateEliminatedNumbers(i, j, puzzle.matrix[i][j].value)
+            this.numbers.forEach(j => {                                         
+                this.updateEliminatedNumbers(i, j, puzzle.matrix[i][j].value)   
             })
         })
     }
@@ -60,19 +59,21 @@ export default class HintHelper {
         //2 - if all other squares in S's row/col/subgrid cannot contain a given number, then S must contain that number
         this.numbers.forEach(i => {
             this.numbers.forEach(j => {             //for each square:
-                if (puzzle.numberAt(i, j) === 0) {  //check it's not already filled in
-                    if (this.eliminatedNumbersMatrix[i][j].length === this.numbers.length - 1){              //condition 1
-                        let number = this.numbers.find(n => !this.eliminatedNumbersMatrix[i][j].includes(n)) //find the only number not eliminated
-                        determinedSquares.push(new Square(i, j, number!))                                    //add hint to list
-                    } 
-                    else {
-                        this.numbers.forEach(n => {                             //for each number:
-                            if (this.checkNumberCantGoAnywhereElse(i, j, n)) {  //condition 2
-                                determinedSquares.push(new Square(i, j, n))
-                            }
-                        })
-                    } 
-                }                                                     
+                if (puzzle.numberAt(i, j) !== 0) {
+                    return                          //check it's not already filled in
+                }  
+                if (this.eliminatedNumbers[i][j].length === this.numbers.length - 1){              //condition 1
+                    let number = this.numbers.find(n => !this.eliminatedNumbers[i][j].includes(n + 1)) //find the only number not eliminated
+                    determinedSquares.push(new Square(i, j, (number! + 1)))                            //add hint to list
+                } 
+                else {
+                    for (let n = 1; n <= this.matrixSize; n++) {            //for each number:
+                        if (this.checkNumberCantGoAnywhereElse(i, j, n)) {  //condition 2
+                            determinedSquares.push(new Square(i, j, n))     //add hint to list
+                            break
+                        }                          
+                    }
+                } 
             })
         })
         return determinedSquares
@@ -80,7 +81,7 @@ export default class HintHelper {
 
     addEliminatedNumber(row: number, col: number, value: number) {
         if (!this.checkIfNumberEliminated(row, col, value)) {   //as we use the length of the eliminated numbers array to check how many numbers have been eliminated,
-            this.eliminatedNumbersMatrix[row][col].push(value)  //we must avoid duplicates
+            this.eliminatedNumbers[row][col].push(value)  //we must avoid duplicates
         }
     }
 
@@ -94,7 +95,7 @@ export default class HintHelper {
             return
         }
         //once a number is set at a particular square, no other square
-        //in that row can be set at that number
+        //in that row can contain that number
         //so that number must be added to the eliminatedNumbers of every 
         //square in that row
         this.numbers.forEach(j => this.addEliminatedNumber(row, j, value))
@@ -118,29 +119,32 @@ export default class HintHelper {
         let colMin = col -  col % subgridSize
         let colMax = colMin + subgridSize        // boundries of subgrid
 
-        for (let i = rowMin; i < rowMax; i++){
+        for (let i = rowMin; i < rowMax; i++){  //iterates over subgrid
             for (let j = colMin; j < colMax; j++){
                 this.addEliminatedNumber(i, j, value)
             }
         }
     }
 
-    checkNumberCantGoAnywhereElse(
+    checkNumberCantGoAnywhereElse(  //checks each row, col and subgrid
         row: number, 
         col: number,  
         value: number
     ) {
-
+        //checks if the number can go in a given square
+        //then checks if, for that row, there are (size - 1) places where it is eliminated (ie 8 in the 9x9 case)
+        //if both true, then the number must go in the given square
+        //repeated for col & subgrid, although any is sufficient
         return (
             !this.checkIfNumberEliminated(row, col, value)      
         && (
-            this.checkIfNumberEliminatedForRestOfRow(row, value) 
-            || this.checkIfNumberEliminatedForRestOfCol(col, value) 
+            this.checkIfNumberEliminatedForRow(row, value)        
+            || this.checkIfNumberEliminatedForCol(col, value)    
             || this.checkIfNumberEliminatedForSubgrid(row, col, value)
         ))
     }
 
-    checkIfNumberEliminatedForRestOfRow(
+    checkIfNumberEliminatedForRow(
         row: number,
         value: number
     ) {
@@ -149,10 +153,10 @@ export default class HintHelper {
             .filter(j => this.checkIfNumberEliminated(row, j, value))
             .length
             
-        return (numberOfSquaresEliminated === this.numbers.length - 1) 
+        return (numberOfSquaresEliminated === this.matrixSize - 1) 
     }
 
-    checkIfNumberEliminatedForRestOfCol(
+    checkIfNumberEliminatedForCol(
         col: number,
         value: number
     ) {
@@ -161,7 +165,7 @@ export default class HintHelper {
             .filter(i => this.checkIfNumberEliminated(i, col, value))
             .length
             
-        return (numberOfSquaresEliminated === this.numbers.length - 1) 
+        return (numberOfSquaresEliminated === this.matrixSize - 1) 
     }
     
     checkIfNumberEliminatedForSubgrid(
@@ -171,13 +175,13 @@ export default class HintHelper {
     ) {
 
         let numberOfSquaresEliminated = 0;
-        let subgridSize = Math.sqrt(this.numbers.length);
+        let subgridSize = Math.sqrt(this.matrixSize);
         let rowMin = row - (row % subgridSize)
         let rowMax = rowMin + subgridSize
         let colMin = col -  col % subgridSize
-        let colMax = colMin + subgridSize       
+        let colMax = colMin + subgridSize       // boundries of subgrid
 
-        for (let i = rowMin; i < rowMax; i++){
+        for (let i = rowMin; i < rowMax; i++){  //iterates over subgrid
             for (let j = colMin; j < colMax; j++){
                 if (this.checkIfNumberEliminated(i, j, value)) {
                     numberOfSquaresEliminated++
@@ -185,6 +189,6 @@ export default class HintHelper {
             }
         }
 
-        return (numberOfSquaresEliminated === this.numbers.length - 1) 
+        return (numberOfSquaresEliminated === this.matrixSize - 1) 
     }
 }

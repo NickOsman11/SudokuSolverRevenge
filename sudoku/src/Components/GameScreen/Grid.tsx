@@ -11,29 +11,20 @@ interface GridProps {
     hintSquare: GridSquare,
 }
 
-export default function Grid(
-    {initialPuzzle,
-    puzzle,
-    selectedSquare,
-    setSelectedSquare,
-    hintSquare,
-    }: GridProps
-    ): JSX.Element{
+export default function Grid(props: GridProps): JSX.Element{
 
     function selectSquare(row: number, col: number) {
-
-        if (initialPuzzle[row][col] === 0) {
-            setSelectedSquare(puzzle.matrix[row][col])
+        if (props.initialPuzzle[row][col] === 0) {
+            props.setSelectedSquare(props.puzzle.matrix[row][col])
         }
     }
 
-    function getClassname(i: number, j: number) {
-
+    function getClassname(i: number, j: number) {       //formats classname for a grid square to add styling
         return (
             "grid-square" 
-            + `${selectedSquare && (i === selectedSquare.row && j ===selectedSquare.col) ? " selected" : ""}`
-            + `${hintSquare && (i === hintSquare.row && j === hintSquare.col) ? " hint" : ""}`
-            + `${(initialPuzzle[i][j] !== 0) ? " initial" : ""}`
+            + `${props.selectedSquare && (i === props.selectedSquare.row && j === props.selectedSquare.col) ? " selected" : ""}`
+            + `${props.hintSquare && (i === props.hintSquare.row && j === props.hintSquare.col) ? " hint" : ""}`
+            + `${(props.initialPuzzle[i][j] !== 0) ? " initial" : ""}`
             + `${j % 3 === 0 ? " third" : ""}`
         )
     }
@@ -41,16 +32,16 @@ export default function Grid(
     return (
         <table className='grid'>
             <tbody>
-                {puzzle.numbers.map(i => {
+                {props.puzzle.numbers.map(i => {
                     return (
-                    <tr className={"row" + `${i % 3 === 0 ? " third" : ""}`}>
-                        {puzzle.numbers.map( j => {
+                    <tr className={"row" + `${i % 3 === 0 ? " third" : ""}`}>   
+                        {props.puzzle.numbers.map( j => {
                             return (
                                 <td 
                                     className={getClassname(i, j)}
                                     onClick={() => selectSquare(i, j)}
                                 >
-                                    {(puzzle.numberAt(i, j) === 0 ? "" : puzzle.numberAt(i, j))}
+                                    {(props.puzzle.numberAt(i, j) === 0 ? "" : props.puzzle.numberAt(i, j))}
                                 </td>
                             )
                         })}

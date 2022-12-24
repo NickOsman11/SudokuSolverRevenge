@@ -2,8 +2,11 @@
 
 A web application to help beginners to learn to play sudoku!
 
-To install the dependencies, run "npm install"
-To run the programme, run "npm run dev"
+To install the dependencies, run 
+npm install
+
+To run the programme, run 
+npm run dev
 
 A beginner's guide to the rules: https://sudoku.com/sudoku-rules/
 

@@ -18,8 +18,11 @@ export default function NewGameScreen(
             <div>
                 <input 
                     type="checkbox"
-                    onClick={() => {easyMode = !easyMode}}/>
-                Easy mode          
+                    onClick={() => {easyMode = !easyMode}}
+                />
+                <label>
+                    Easy mode
+                </label>      
             </div>
         </div>          
     )

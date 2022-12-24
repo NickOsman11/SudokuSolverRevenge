@@ -1,5 +1,4 @@
 import Square from "./square";
-import HintHelper from "./hintHelper";
 
 export default class Puzzle {
     matrixSize: number;
@@ -11,33 +10,33 @@ export default class Puzzle {
         easyMode: boolean, 
         initialMatrix?: number[][], 
         oldMatrix?: Square[][]
-        ) {
+    ) {
 
         this.matrixSize = 9;
-        this.numbers = this.getNumbersList(); //list of numbers from [1 => gridsize]
+        this.numbers = this.getNumbersList();       //list of numbers from [0 => (n-1)] for iterating over
         this.easyMode = easyMode;
-        this.matrix = this.createGrid()
+        this.matrix = this.createMatrix()           //creates n x n matrix of Squares
         if (initialMatrix) {
-            this.populateGrid(initialMatrix)
+            this.setInitialNumbers(initialMatrix)   
         }
-        else if (oldMatrix) {
-            this.matrix = oldMatrix
+        else if (oldMatrix) {                        
+            this.matrix = oldMatrix             
         }
     }
 
-    createGrid(): Square[][] {
+    createMatrix(): Square[][] {      
 
-        const puzzle = new Array(this.matrixSize)
-        for (let i = 0; i<this.matrixSize; i++){
-            puzzle[i] = new Array(this.matrixSize)
-            for (let j = 0; j<this.matrixSize; j++){
-                puzzle[i][j] = Square.at(i, j, 0)
-            }
-        }
-        return puzzle 
+        const matrix = new Array(this.matrixSize)
+        this.numbers.forEach(i => {
+            matrix[i] = new Array(this.matrixSize)
+            this.numbers.forEach(j => {
+                matrix[i][j] = new Square(i, j, 0)
+            })
+        })
+        return matrix     
     }
 
-    populateGrid(initialGrid: number[][]) {
+    setInitialNumbers(initialGrid: number[][]) {
 
         this.numbers.map(i => {
             this.numbers.map(j => {
@@ -60,12 +59,11 @@ export default class Puzzle {
     }
 
     setNumber(i:number, j:number, newValue:number) {
-
         this.matrix[i][j].value = newValue
     }
 
     addTriedNumber(i:number, j:number, number: number) {
-        if (this.matrix[i][j].value !== number){
+        if (this.numberAt(i, j) !== number){
             this.matrix[i][j].triedNumbers.push(number)
         }
     }

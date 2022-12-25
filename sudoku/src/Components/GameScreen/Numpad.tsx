@@ -19,6 +19,7 @@ export default function Numpad(props: NumpadProps): JSX.Element{
 
                 return (
                     <button 
+                        key={n}
                         className={classname}
                         onClick={() => props.makeMove(n+1)}
                     >

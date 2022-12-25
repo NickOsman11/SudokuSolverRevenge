@@ -18,6 +18,7 @@ interface SettingsProps {
     newGame: () => void;
     setHintSquare: (hintSquare: Square | undefined) => void;
     setSelectedSquare: (selectedSquare: Square | undefined) => void;
+    setMessage: (successMessage: string | undefined) => void;
 }
 
 export const Settings = (props: SettingsProps) => {
@@ -29,49 +30,61 @@ export const Settings = (props: SettingsProps) => {
         if (!props.easyMode) {
             let puzzleCopy = new Puzzle(undefined, props.puzzle.matrix.map(i => {return i.map(j => {return j})}))
 
-            puzzleCopy.numbers.forEach(i => {
-                puzzleCopy.numbers.forEach(j => {           //for each square:
-                    if (puzzleCopy.numberAt(i, j) === 0) {  //if no number has been set, do nothing
-                        return
-                    }                                   
-                    if (props.initialPuzzle.solvedMatrix[i][j] !== puzzleCopy.numberAt(i, j)) { //if number doesn't match known correct number:
-                        puzzleCopy.matrix[i][j] = new Square(i, j, 0)                           //remove it from the new matrix
-                    }
-                })
+            puzzleCopy.matrix.forEach(row => {              //for each row
+                row.filter(square => square.value !== 0)    //find all the squares that are not blank
+                                                            //of those find all squares that do not match the solved matrix
+                .filter(square => square.value !== props.initialPuzzle.solvedMatrix[square.row][square.col])
+                                                            //for each of those, replace that square in the new matrix with a blank one
+                .forEach(square => puzzleCopy.matrix[square.row][square.col] = new Square(square.row, square.col, 0) )
             })
-            props.setPuzzle(puzzleCopy)                   //replace puzzle with "corrected" copy                              
+            props.setPuzzle(puzzleCopy)                   //replace puzzle with corrected copy                              
         }
-        else {
-            props.setHintSquare(undefined)
-        }
+        props.setSelectedSquare(undefined)
+        props.setHintSquare(undefined)
         props.setEasyMode(!props.easyMode)
     }
 
     function getHint() {
         const squares = props.determinedSquares
-        if (squares.length !== 0) {
+        if (squares.length === 0) {
+            props.setMessage("Looks like there aren't any certain moves left to make!" 
+                + " You'll have to turn off easy mode and make a guess, and see if that"
+                + "leads to a contradiction. You can always turn easy mode"
+                + "back on later, and any incorrect moves you've made will be removed")
+        }
+        else {
             const square = squares[Math.floor(Math.random()*squares.length)]
             props.setHintSquare(square)
             props.setSelectedSquare(props.puzzle.matrix[square.row][square.col])
-        }
-        else {
-            props.setHintSquare(undefined)
         }
     }
 
     function checkIfPuzzleComplete() {
 
-        const incomplete = props.puzzle.matrix
-            .some(row => {                      //does there exist a row
-                return row.some(square => {     //containing a square
-                    return square.value === 0   //whose value is 0?
+        const complete = props.puzzle.matrix
+            .every(row => {                      //does every row
+                return row.every(square => {     //contain only squares
+                    return square.value !== 0   //whose value is not 0?
                 })
-        })                                      //if so, puzzle is incomplete
-        return !incomplete
+        })                                      //if so, puzzle is complete
+        return complete
     }
 
     function submit() {
-        console.log("submitted")
+        //check if solution is correct
+        const correct = props.puzzle.matrix 
+        .every(row => {                      //does every row
+            return row.every(square => {     //contain only squares
+                                            //whose value is the same as in the solved matrix?
+                return square.value === props.initialPuzzle.solvedMatrix[square.row][square.col]   
+            })
+        })                                  //if so, solution is correct
+        if (correct) {
+            props.setMessage("Success! Great work")
+        }
+        else {
+            props.setMessage("Are you sure? Why don't you double check...")
+        }
     }
 
     return ( 
@@ -95,7 +108,7 @@ export const Settings = (props: SettingsProps) => {
             <button
                 className="settings-button"
                 onClick={getHint}
-                disabled={!props.easyMode}
+                disabled={!props.easyMode || checkIfPuzzleComplete()}
             >
                 Hint
             </button>

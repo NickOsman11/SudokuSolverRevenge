@@ -13,3 +13,9 @@ h3 {
     display: flex;
     align-items: center;
 }
+
+.message {
+    overflow-wrap: break-word;
+    width: 400px;
+    height: 152px;
+}

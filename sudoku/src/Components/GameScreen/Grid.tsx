@@ -36,10 +36,14 @@ export default function Grid(props: GridProps): JSX.Element{
             <tbody>
                 {props.puzzle.numbers.map(i => {
                     return (
-                    <tr className={"row" + `${i % 3 === 0 ? " third-row" : ""}`}>   
+                    <tr 
+                        key={i}
+                        className={"row" + `${i % 3 === 0 ? " third-row" : ""}`}
+                    >   
                         {props.puzzle.numbers.map( j => {
                             return (
                                 <td 
+                                    key={j}
                                     className={getClassname(i, j)}
                                     onClick={() => selectSquare(i, j)}
                                 >

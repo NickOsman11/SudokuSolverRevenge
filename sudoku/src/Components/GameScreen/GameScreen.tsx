@@ -16,6 +16,7 @@ export default function GameScreen(): JSX.Element  {
     const [easyMode, setEasyMode] = useState(false);
     const [selectedSquare, setSelectedSquare] = useState<Square>();    //orange square on the grid/numpad
     const [hintSquare, setHintSquare] = useState<Square>();            //green square highlighted by pressing hint button
+    const [message, setMessage] = useState<string>();
 
     if (initialPuzzle === undefined || puzzle === undefined) {
         newGame()
@@ -35,6 +36,7 @@ export default function GameScreen(): JSX.Element  {
         setPuzzle(new Puzzle(rawMatrix));
         setSelectedSquare(undefined)
         setHintSquare(undefined)
+        setMessage(undefined)
     }
 
     let hintHelper = new HintHelper(puzzle)
@@ -47,6 +49,7 @@ export default function GameScreen(): JSX.Element  {
         if (!selectedSquare) {
             return
         }
+        setMessage(undefined)
         const [row, col] = [selectedSquare.row, selectedSquare.col]
         let puzzleCopy = new Puzzle(undefined, puzzle.matrix.map(i => {return i.map(j => {return j})}))
         //creates a copy of the current puzzle which can be altered and used to set the new puzzle state
@@ -102,7 +105,11 @@ export default function GameScreen(): JSX.Element  {
                 newGame={newGame}
                 setHintSquare={setHintSquare}
                 setSelectedSquare={setSelectedSquare}
+                setMessage={setMessage}
             />
+        </div>
+        <div className="message">
+            {message ? <p>{message}</p> : <p></p>}
         </div>
     </main>
     )

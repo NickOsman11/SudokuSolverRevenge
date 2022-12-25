@@ -15,18 +15,18 @@ table, th, td {
     + .third-column {
         border-left: 3px solid  $gridline;
     }
+}
 
-    + .initial {
-        background-color: $coral;
-    }
+.grid-square.initial {
+    background-color: $coral;
+}
 
-    + .hint {
-        background-color: $green;
-    }
-    
-    + .selected {
-        background-color: $orange;
-    }
+.grid-square.hint {
+    background-color: $green;
+}
+
+.grid-square.selected {
+    background-color: $orange;
 }
 
 .row {

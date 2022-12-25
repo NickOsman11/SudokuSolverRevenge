@@ -19,7 +19,7 @@ export default function Grid(props: GridProps): JSX.Element{
         }
     }
 
-    function getClassname(i: number, j: number) {       //formats classname for a grid square to add styling
+    function getClassname(i: number, j: number) { 
         return (
             "grid-square" 
             + `${props.selectedSquare && (i === props.selectedSquare.row && j === props.selectedSquare.col) ? " selected" : ""}`

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import './Grid.css'
+import './Grid.scss'
 import Puzzle from '../../GameObjects/puzzle';
 import GridSquare from '../../GameObjects/square';
 
@@ -25,7 +25,7 @@ export default function Grid(props: GridProps): JSX.Element{
             + `${props.selectedSquare && (i === props.selectedSquare.row && j === props.selectedSquare.col) ? " selected" : ""}`
             + `${props.hintSquare && (i === props.hintSquare.row && j === props.hintSquare.col) ? " hint" : ""}`
             + `${(props.initialPuzzle[i][j] !== 0) ? " initial" : ""}`
-            + `${j % 3 === 0 ? " third" : ""}`
+            + `${j % 3 === 0 ? " third-column" : ""}`
         )
     }
     
@@ -34,7 +34,7 @@ export default function Grid(props: GridProps): JSX.Element{
             <tbody>
                 {props.puzzle.numbers.map(i => {
                     return (
-                    <tr className={"row" + `${i % 3 === 0 ? " third" : ""}`}>   
+                    <tr className={"row" + `${i % 3 === 0 ? " third-row" : ""}`}>   
                         {props.puzzle.numbers.map( j => {
                             return (
                                 <td 

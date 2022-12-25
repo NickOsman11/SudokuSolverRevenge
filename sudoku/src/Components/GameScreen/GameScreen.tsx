@@ -67,12 +67,11 @@ export default function GameScreen(props : GameScreenProps): JSX.Element  {
         />
         {props.easyMode ?  
         <button
-            onClick={() => setHintSquare(hintHelper.getHint())}
-            // onClick={() => {
-            //     let square = hintHelper.getHint()
-            //     setHintSquare(square)
-            //     setSelectedSquare(square);
-            // }}
+            onClick={() => {
+                let square = hintHelper.getHint()
+                setHintSquare(square)
+                setSelectedSquare(new Square(square.row, square.col, 0));
+            }}
         >
             Hint
         </button> :

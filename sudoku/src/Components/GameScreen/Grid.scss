@@ -1,0 +1,40 @@
+@import "../../constants.scss";
+
+table, th, td {
+    border: 3px solid $gridline;
+    border-collapse: collapse;
+  }
+
+.grid-square {
+    border: 1px solid $gridline;
+    height: 40px;
+    width:40px;
+    text-align: center;
+    padding: 0;
+
+    + .third-column {
+        border-left: 3px solid  $gridline;
+    }
+
+    + .initial {
+        background-color: $coral;
+    }
+
+    + .hint {
+        background-color: $green;
+    }
+    
+    + .selected {
+        background-color: $orange;
+    }
+}
+
+.row {
+    margin: 0;
+    height: 40px;
+
+    + .third-row {
+        border-top: 3px solid $gridline;
+    }
+}
+

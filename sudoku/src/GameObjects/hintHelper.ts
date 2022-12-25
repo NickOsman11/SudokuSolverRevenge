@@ -81,7 +81,7 @@ export default class HintHelper {
 
     addEliminatedNumber(row: number, col: number, value: number) {
         if (!this.checkIfNumberEliminated(row, col, value)) {   //as we use the length of the eliminated numbers array to check how many numbers have been eliminated,
-            this.eliminatedNumbers[row][col].push(value)  //we must avoid duplicates
+            this.eliminatedNumbers[row][col].push(value)        //we must avoid duplicates
         }
     }
 
@@ -188,7 +188,6 @@ export default class HintHelper {
                 }
             }
         }
-
         return (numberOfSquaresEliminated === this.matrixSize - 1) 
     }
 }

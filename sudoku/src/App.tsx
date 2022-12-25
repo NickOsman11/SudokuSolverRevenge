@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import './App.css'
+import './App.scss'
 import NewGameScreen from './Components/NewGameScreen/NewGameScreen'
-import GridSquare from './GameObjects/square'
 import Puzzle from './GameObjects/puzzle'
-import puzzles from './assets/puzzles'
 import GameScreen from './Components/GameScreen/GameScreen'
 
 function App() {

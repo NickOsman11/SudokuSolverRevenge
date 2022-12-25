@@ -1,6 +1,6 @@
 import Puzzle from '../../GameObjects/puzzle';
 import GridSquare from '../../GameObjects/square';
-import './Numpad.css'
+import './Numpad.scss'
 
 interface NumpadProps {
     selectedSquare: GridSquare,

@@ -2,19 +2,21 @@ import { useEffect } from 'react';
 import './Grid.scss'
 import Puzzle from '../../GameObjects/puzzle';
 import GridSquare from '../../GameObjects/square';
+import { InitialPuzzle } from './Settings';
 
 interface GridProps {
-    initialPuzzle: number[][];
+    initialPuzzle: InitialPuzzle;
     puzzle: Puzzle;
     selectedSquare?: GridSquare;
-    setSelectedSquare: (square: GridSquare) => void, 
-    hintSquare: GridSquare,
+    setSelectedSquare: (square: GridSquare) => void;
+    hintSquare: GridSquare;
+    easyMode: boolean;
 }
 
 export default function Grid(props: GridProps): JSX.Element{
 
     function selectSquare(row: number, col: number) {
-        if (props.initialPuzzle[row][col] === 0) {
+        if (props.initialPuzzle.rawMatrix[row][col] === 0) {
             props.setSelectedSquare(props.puzzle.matrix[row][col])
         }
     }
@@ -24,7 +26,7 @@ export default function Grid(props: GridProps): JSX.Element{
             "grid-square" 
             + `${props.selectedSquare && (i === props.selectedSquare.row && j === props.selectedSquare.col) ? " selected" : ""}`
             + `${props.hintSquare && (i === props.hintSquare.row && j === props.hintSquare.col) ? " hint" : ""}`
-            + `${(props.initialPuzzle[i][j] !== 0) ? " initial" : ""}`
+            + `${(props.initialPuzzle.rawMatrix[i][j] !== 0) ? " initial" : ""}`
             + `${j % 3 === 0 ? " third-column" : ""}`
         )
     }

@@ -1,32 +1,17 @@
 @import "./constants.scss";
 
 #root {
-  /* max-width: 1280px; */
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  background-color:  $teal;
-  color: whitesmoke;
+    /* max-width: 1280px; */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    background-color:  $teal;
+    color: whitesmoke;
 }
 
 .puzzle-area {
-  width: 400px;
-  position: relative;
-  color: whitesmoke;
-
+    min-width: 400px; 
 }
-
-.selected {
-  background-color: rgb(202, 144, 36);
-}
-
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-

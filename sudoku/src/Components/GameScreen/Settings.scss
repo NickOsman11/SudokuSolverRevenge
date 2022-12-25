@@ -1,0 +1,17 @@
+@import "../../constants.scss";
+
+.settings {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-button {
+    color: $midnight-blue;
+    margin: 2px;
+}
+
+:disabled {
+    color: rgb(185, 182, 182);
+}
+

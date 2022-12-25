@@ -21,13 +21,6 @@ export default class HintHelper {
         return this.determinedSquares.some(s => (s.row === row && s.col === col && s.value === number))
     }
 
-    getHint(): Square {
-        if (this.determinedSquares.length !== 0) {
-            return this.determinedSquares[Math.floor(Math.random()*this.determinedSquares.length)]
-        }
-        return new Square(-1, -1, 0)
-    }
-
     checkIfNumberEliminated(row: number, col: number, value: number) {
         return this.eliminatedNumbers[row][col].includes(value)                        
     }

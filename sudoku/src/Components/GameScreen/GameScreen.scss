@@ -1,0 +1,15 @@
+main {
+    display: flex;
+    flex-direction: column;
+    position: relative
+}
+
+h3 {
+    text-align: left;
+    margin: 5px;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+}

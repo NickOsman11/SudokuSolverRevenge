@@ -16,8 +16,8 @@ interface SettingsProps {
     easyMode: boolean;
     setEasyMode: (mode: boolean) => void;
     newGame: () => void;
-    setHintSquare: (hintSquare: Square) => void;
-    setSelectedSquare: (selectedSquare: Square) => void;
+    setHintSquare: (hintSquare: Square | undefined) => void;
+    setSelectedSquare: (selectedSquare: Square | undefined) => void;
 }
 
 export const Settings = (props: SettingsProps) => {
@@ -35,14 +35,14 @@ export const Settings = (props: SettingsProps) => {
                         return
                     }                                   
                     if (props.initialPuzzle.solvedMatrix[i][j] !== puzzleCopy.numberAt(i, j)) { //if number doesn't match known correct number:
-                        puzzleCopy.matrix[i][j] = new Square(i, j, 0)                           //remove it
+                        puzzleCopy.matrix[i][j] = new Square(i, j, 0)                           //remove it from the new matrix
                     }
                 })
             })
             props.setPuzzle(puzzleCopy)                   //replace puzzle with "corrected" copy                              
         }
         else {
-            props.setHintSquare(new Square(-1, -1, 0))
+            props.setHintSquare(undefined)
         }
         props.setEasyMode(!props.easyMode)
     }
@@ -55,8 +55,23 @@ export const Settings = (props: SettingsProps) => {
             props.setSelectedSquare(props.puzzle.matrix[square.row][square.col])
         }
         else {
-            props.setHintSquare(new Square(-1, -1, 0))
+            props.setHintSquare(undefined)
         }
+    }
+
+    function checkIfPuzzleComplete() {
+
+        const incomplete = props.puzzle.matrix
+            .some(row => {                      //does there exist a row
+                return row.some(square => {     //containing a square
+                    return square.value === 0   //whose value is 0?
+                })
+        })                                      //if so, puzzle is incomplete
+        return !incomplete
+    }
+
+    function submit() {
+        console.log("submitted")
     }
 
     return ( 
@@ -84,12 +99,15 @@ export const Settings = (props: SettingsProps) => {
             >
                 Hint
             </button>
+
             <button
-                className="settings-button">
+                className="settings-button"
+                onClick={submit}
+                disabled={!checkIfPuzzleComplete()}
+            >
                 Submit
             </button>
+
         </div>          
     )
-
-    return <></>
 }

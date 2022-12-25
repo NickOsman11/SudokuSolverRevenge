@@ -9,7 +9,7 @@ interface GridProps {
     puzzle: Puzzle;
     selectedSquare?: GridSquare;
     setSelectedSquare: (square: GridSquare) => void;
-    hintSquare: GridSquare;
+    hintSquare?: GridSquare;
     easyMode: boolean;
 }
 

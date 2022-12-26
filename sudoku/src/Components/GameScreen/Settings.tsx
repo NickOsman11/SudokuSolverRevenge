@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import puzzles from "../../assets/puzzles";
 import Puzzle from "../../GameObjects/puzzle";
 import Square from "../../GameObjects/square";
 import "./Settings.scss"
@@ -15,13 +17,14 @@ interface SettingsProps {
     determinedSquares: Square[];
     easyMode: boolean;
     setEasyMode: (mode: boolean) => void;
-    newGame: () => void;
     setHintSquare: (hintSquare: Square | undefined) => void;
     setSelectedSquare: (selectedSquare: Square | undefined) => void;
     setMessage: (successMessage: string | undefined) => void;
 }
 
-export const Settings = (props: SettingsProps) => {
+export function Settings(props: SettingsProps) {
+
+    const navigate = useNavigate();
 
     function toggleEasyMode() {
         //if easy mode was turned off, incorrect moves might have been made
@@ -96,14 +99,8 @@ export const Settings = (props: SettingsProps) => {
                 />
                 <label>
                     Easy mode
-                </label>      
-            </div>
-            <button
-                className="settings-button"
-                onClick={props.newGame}
-            >
-                New Game
-            </button>
+                </label>
+            </div>   
 
             <button
                 className="settings-button"
@@ -119,6 +116,13 @@ export const Settings = (props: SettingsProps) => {
                 disabled={!checkIfPuzzleComplete()}
             >
                 Submit
+            </button>
+
+            <button
+                className="settings-button"
+                onClick={() => {navigate(`/${Math.floor(Math.random()*puzzles.RawSudoku.length) + 1}`)}} //navigate to random game
+            >
+                New Game
             </button>
 
         </div>          

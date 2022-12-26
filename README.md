@@ -8,7 +8,7 @@ npm install
 To run the programme, run 
 npm run dev
 
-A beginner's guide to the rules: https://sudoku.com/sudoku-rules/
+For a particular puzzle, visit "/{puzzleID}"
 
 When playing with Easy Mode enabled, you will not be able to enter a number on the grid unless
 you have enough information available to you to know for sure that it belongs there. If you try

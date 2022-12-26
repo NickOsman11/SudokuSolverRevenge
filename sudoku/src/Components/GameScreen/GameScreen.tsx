@@ -3,13 +3,17 @@ import Numpad from "./Numpad";
 import HintHelper from "../../GameObjects/hintHelper";
 import Puzzle from "../../GameObjects/puzzle";
 import Square from "../../GameObjects/square";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./GameScreen.scss"
 import { InitialPuzzle, Settings } from "./Settings";
 import puzzles from "../../assets/puzzles";
+import { useParams } from "react-router";
 
 
 export default function GameScreen(): JSX.Element  {
+
+    const {puzzleID} = useParams()
+    const puzzleNumber = parseInt(puzzleID!) -1
 
     const [initialPuzzle, setInitialPuzzle] = useState<InitialPuzzle>();
     const [puzzle, setPuzzle]= useState<Puzzle>();
@@ -18,20 +22,25 @@ export default function GameScreen(): JSX.Element  {
     const [hintSquare, setHintSquare] = useState<Square>();            //green square highlighted by pressing hint button
     const [message, setMessage] = useState<string>();
 
+    useEffect(() => {
+        newGame();
+    }, [puzzleNumber]);
+    
     if (initialPuzzle === undefined || puzzle === undefined) {
         newGame()
         return <></>
     }
-    
-    function newGame() {
+    if (Number.isNaN(puzzleNumber) || puzzleNumber < 0 || puzzleNumber >= puzzles.RawSudoku.length) {
+        return <p>Invalid Puzzle ID - try a number from 1 to {puzzles.RawSudoku.length} </p>
+    }
 
-        const puzzleNumber = Math.floor(Math.random()*puzzles.RawSudoku.length)
+    function newGame() {
+        
         const rawMatrix= puzzles.RawSudoku[puzzleNumber]
-        const solvedMatrix = puzzles.SolvedSudoku[puzzleNumber]
         setInitialPuzzle(
             {puzzleNumber: puzzleNumber, 
             rawMatrix: rawMatrix,
-            solvedMatrix: solvedMatrix
+            solvedMatrix: puzzles.SolvedSudoku[puzzleNumber]
         });
         setPuzzle(new Puzzle(rawMatrix));
         setSelectedSquare(undefined)
@@ -102,7 +111,6 @@ export default function GameScreen(): JSX.Element  {
                 determinedSquares={hintHelper.determinedSquares}
                 easyMode={easyMode}
                 setEasyMode={setEasyMode}
-                newGame={newGame}
                 setHintSquare={setHintSquare}
                 setSelectedSquare={setSelectedSquare}
                 setMessage={setMessage}

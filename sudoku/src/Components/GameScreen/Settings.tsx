@@ -52,8 +52,8 @@ export function Settings(props: SettingsProps) {
         if (squares.length === 0) {
             props.setMessage("Looks like there aren't any certain moves left to make!" 
                 + " You'll have to turn off easy mode and make a guess, and see if that"
-                + "leads to a contradiction. You can always turn easy mode"
-                + "back on later, and any incorrect moves you've made will be removed")
+                + " leads to a contradiction. You can always turn easy mode"
+                + " back on later, and any incorrect moves you've made will be removed")
         }
         else {
             const square = squares[Math.floor(Math.random()*squares.length)]

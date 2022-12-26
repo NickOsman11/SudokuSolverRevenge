@@ -39,7 +39,7 @@ export default class HintHelper {
     populateEliminatedNumbers(puzzle: Puzzle) {
         this.numbers.forEach(i => {
             this.numbers.forEach(j => {                                         
-                this.updateEliminatedNumbers(i, j, puzzle.matrix[i][j].value)   
+                this.updateEliminatedNumbers(i, j, puzzle.numberAt(i, j))   
             })
         })
     }

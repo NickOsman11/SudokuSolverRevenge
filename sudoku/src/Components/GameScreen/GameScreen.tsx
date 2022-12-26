@@ -63,18 +63,7 @@ export default function GameScreen(): JSX.Element  {
         let puzzleCopy = new Puzzle(undefined, puzzle.matrix.map(i => {return i.map(j => {return j})}))
         //creates a copy of the current puzzle which can be altered and used to set the new puzzle state
 
-        if (easyMode) {                                                     //easy mode-----------------------------
-            if (hintHelper.checkIfNumberEliminated(row, col, newValue)) {   //If an eliminated number was guessed
-                puzzleCopy.addTriedNumber(row, col, newValue)               //crosses it off the list (will not appear on numpad any more)
-            }
-            else if (hintHelper.checkIfMoveCorrect(row, col, newValue)) {   //Sets number if number is fully degtermined
-                puzzleCopy.setNumber(row, col, newValue)                    //If indeterminate, does nothing
-                if (hintSquare && hintSquare.row === row && hintSquare.col === col) {     //if that was the hint square,
-                    setHintSquare(undefined)                    //set it to blank
-                }
-            }                                                               
-        }                                                                       
-        else {                                                              //hard mode-----------------------------
+        if (!easyMode) {                                                    //hard mode-----------------------------
             if (puzzle.numberAt(row, col) !== newValue) {                   //if a number different from the one already there was guessed
                 puzzleCopy.setNumber(row, col, newValue)                    //set that number
             }
@@ -82,6 +71,12 @@ export default function GameScreen(): JSX.Element  {
                 puzzleCopy.setNumber(row, col, 0)                           //unset that number
             }
         }
+        else if (hintHelper.checkIfMoveCorrect(row, col, newValue)) {               //easy mode-----------------------------
+            puzzleCopy.setNumber(row, col, newValue)                                //if enough info is available to know the move is correct, set that number 
+            if (hintSquare && hintSquare.row === row && hintSquare.col === col) {   //if that was the hint square,
+                setHintSquare(undefined)                                            //set it to blank
+            }                                     
+        }                                                                       
         setSelectedSquare(puzzleCopy.matrix[row][col])
         setPuzzle(puzzleCopy)
     }
@@ -103,6 +98,7 @@ export default function GameScreen(): JSX.Element  {
                 puzzle={puzzle}
                 makeMove={makeMove}
                 easyMode={easyMode}
+                hintHelper={hintHelper}
             />
             <Settings 
                 puzzle={puzzle}
@@ -112,6 +108,7 @@ export default function GameScreen(): JSX.Element  {
                 easyMode={easyMode}
                 setEasyMode={setEasyMode}
                 setHintSquare={setHintSquare}
+                selectedSquare={selectedSquare}
                 setSelectedSquare={setSelectedSquare}
                 setMessage={setMessage}
             />

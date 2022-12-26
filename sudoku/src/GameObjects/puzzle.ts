@@ -53,18 +53,16 @@ export default class Puzzle {
         };
         return numbersList
     }
+
+    squareAt(row: number, col: number) {
+        return this.matrix[row][col]
+    }
     
-    numberAt(i:number, j:number) {
-        return this.matrix[i][j].value
+    numberAt(row: number, col: number) {
+        return this.matrix[row][col].value
     }
 
-    setNumber(i:number, j:number, newValue:number) {
-        this.matrix[i][j].value = newValue
-    }
-
-    addTriedNumber(i:number, j:number, number: number) {
-        if (this.numberAt(i, j) !== number){
-            this.matrix[i][j].triedNumbers.push(number)
-        }
+    setNumber(row: number, col: number, newValue: number) {
+        this.matrix[row][col].value = newValue
     }
 };

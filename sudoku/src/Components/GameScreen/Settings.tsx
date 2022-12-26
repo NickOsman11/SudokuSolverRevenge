@@ -18,6 +18,7 @@ interface SettingsProps {
     easyMode: boolean;
     setEasyMode: (mode: boolean) => void;
     setHintSquare: (hintSquare: Square | undefined) => void;
+    selectedSquare?: Square;
     setSelectedSquare: (selectedSquare: Square | undefined) => void;
     setMessage: (successMessage: string | undefined) => void;
 }
@@ -35,14 +36,15 @@ export function Settings(props: SettingsProps) {
 
             puzzleCopy.matrix.forEach(row => {              //for each row
                 row.filter(square => square.value !== 0)    //find all the squares that are not blank
-                                                            //of those find all squares that do not match the solved matrix
+                                                            //of those, find all squares that do not match the solved matrix
                 .filter(square => square.value !== props.initialPuzzle.solvedMatrix[square.row][square.col])
                                                             //for each of those, replace that square in the new matrix with a blank one
-                .forEach(square => puzzleCopy.matrix[square.row][square.col] = new Square(square.row, square.col, 0) )
+                .forEach(square => puzzleCopy.setNumber(square.row, square.col, 0))
             })
-            props.setPuzzle(puzzleCopy)                   //replace puzzle with corrected copy                              
+            props.setPuzzle(puzzleCopy)
+            //the selected square may have contained a number - replace it with a blank square
+            props.selectedSquare && props.setSelectedSquare(new Square(props.selectedSquare.row, props.selectedSquare.col, 0))            
         }
-        props.setSelectedSquare(undefined)
         props.setHintSquare(undefined)
         props.setEasyMode(!props.easyMode)
     }

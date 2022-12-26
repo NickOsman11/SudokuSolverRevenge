@@ -52,10 +52,7 @@ export default function GameScreen(): JSX.Element  {
 
     function makeMove(newValue: number) {      
 
-        if (!puzzle) {
-            return
-        }
-        if (!selectedSquare) {
+        if (!puzzle || !selectedSquare) {
             return
         }
         setMessage(undefined)
